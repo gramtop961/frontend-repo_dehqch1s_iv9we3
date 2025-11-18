@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
 
-export default function DoctorsExplorer() {
+export default function DoctorsExplorer({ initialHospitalId = '', initialClinicId = '' }) {
   const [hospitals, setHospitals] = useState([])
   const [clinics, setClinics] = useState([])
   const [doctors, setDoctors] = useState([])
@@ -35,6 +35,11 @@ export default function DoctorsExplorer() {
         if (!res.ok) throw new Error('خطأ أثناء جلب المستشفيات')
         const data = await res.json()
         setHospitals(data)
+        // preselect hospital if provided
+        if (initialHospitalId) {
+          const exists = data.find(h => String(h.id) === String(initialHospitalId))
+          if (exists) setSelectedHospital(String(initialHospitalId))
+        }
       } catch (e) {
         console.error(e)
         setError('تعذر تحميل قائمة المستشفيات')
@@ -43,7 +48,7 @@ export default function DoctorsExplorer() {
       }
     }
     loadHospitals()
-  }, [])
+  }, [initialHospitalId])
 
   // When hospital changes, load clinics
   useEffect(() => {
@@ -62,8 +67,11 @@ export default function DoctorsExplorer() {
         if (!res.ok) throw new Error('خطأ أثناء جلب العيادات')
         const data = await res.json()
         setClinics(data)
-        // Reset clinic selection if not in list
-        if (!data.find(c => c.id === selectedClinic)) {
+        // Reset clinic selection if not in list, or preselect when coming from details page
+        const found = data.find(c => c.id === initialClinicId)
+        if (initialClinicId && found) {
+          setSelectedClinic(String(initialClinicId))
+        } else if (!data.find(c => c.id === selectedClinic)) {
           setSelectedClinic('')
         }
       } catch (e) {
@@ -74,7 +82,7 @@ export default function DoctorsExplorer() {
       }
     }
     loadClinics()
-  }, [selectedHospital])
+  }, [selectedHospital, initialClinicId])
 
   // Load doctors when clinic or specialty changes
   useEffect(() => {

@@ -49,7 +49,7 @@ export default function HospitalGrid({ query }) {
             <h3 className="text-lg font-bold text-slate-800 mb-1">{h.name}</h3>
             <p className="text-slate-600 text-sm">{h.city} • {h.phone || 'بدون هاتف'}</p>
             <p className="text-slate-500 text-sm mt-2 line-clamp-2">{h.address}</p>
-            <a href={`/#hospital-${h.id}`} className="inline-flex mt-4 text-blue-600 hover:text-blue-700 font-semibold">تفاصيل العيادات</a>
+            <a href={`/hospital/${h.id}`} className="inline-flex mt-4 text-blue-600 hover:text-blue-700 font-semibold">تفاصيل العيادات</a>
           </div>
         </div>
       ))}
