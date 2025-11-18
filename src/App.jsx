@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import HospitalGrid from './components/HospitalGrid'
+import DoctorsExplorer from './components/DoctorsExplorer'
 
 function App() {
   const [query, setQuery] = useState('')
@@ -16,6 +17,11 @@ function App() {
           <h2 className="text-xl font-bold">المستشفيات و العيادات</h2>
         </div>
         <HospitalGrid query={query} />
+
+        <div className="flex items-center justify-between mb-4 mt-12 rtl:flex-row-reverse">
+          <h2 className="text-xl font-bold">ابحث عن طبيب حسب العيادة أو التخصص</h2>
+        </div>
+        <DoctorsExplorer />
       </main>
 
       <footer className="border-t border-slate-200">
