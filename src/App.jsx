@@ -1,11 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import HospitalGrid from './components/HospitalGrid'
 import DoctorsExplorer from './components/DoctorsExplorer'
+import AddHospitalForm from './components/AddHospitalForm'
 
 function App() {
   const [query, setQuery] = useState('')
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  useEffect(() => {
+    const handler = () => setRefreshKey(k => k + 1)
+    window.addEventListener('refresh-hospitals', handler)
+    return () => window.removeEventListener('refresh-hospitals', handler)
+  }, [])
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -16,7 +24,12 @@ function App() {
         <div className="flex items-center justify-between mb-6 rtl:flex-row-reverse">
           <h2 className="text-xl font-bold">المستشفيات و العيادات</h2>
         </div>
-        <HospitalGrid query={query} />
+
+        <AddHospitalForm />
+
+        <div className="mt-6">
+          <HospitalGrid key={refreshKey} query={query} />
+        </div>
 
         <div className="flex items-center justify-between mb-4 mt-12 rtl:flex-row-reverse">
           <h2 className="text-xl font-bold">ابحث عن طبيب حسب العيادة أو التخصص</h2>
